@@ -1,0 +1,54 @@
+{
+  "name": "@exweiv/easy-auth",
+  "version": "0.0.1",
+  "description": "Integrate popular OAuth apps with your Wix website easily.",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "types": "./types/index.d.ts",
+  "keywords": [
+    "wix",
+    "velo",
+    "exweiv",
+    "easy-auth",
+    "oauth"
+  ],
+  "author": {
+    "name": "ExWeiv Apps Team",
+    "email": "info@apps.exweiv.com"
+  },
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "url": "git@github.com:ExWeiv/easy-auth.git",
+    "type": "git"
+  },
+  "homepage": "https://apps.exweiv.com/",
+  "bugs": {
+    "url": "https://github.com/ExWeiv/easy-auth/issues",
+    "email": "info@apps.exweiv.com"
+  },
+  "contributors": [
+    {
+      "name": "Enes Bekar",
+      "url": "https://github.com/l0eix"
+    }
+  ],
+  "engines": {
+    "node": ">=18.17.1"
+  },
+  "dependencies": {
+    "@exweiv/wix-secret-helpers": "^0.0.5",
+    "axios": "^1.6.8",
+    "querystring": "^0.2.1",
+    "typescript": "^5.4.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.8"
+  }
+}
