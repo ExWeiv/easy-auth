@@ -1,7 +1,7 @@
-/// <reference path="../../types/easy-auth-facebook.d.ts" />
+/// <reference path="../../types/index.d.ts" />
 
 // Type Imports
-import type { FacebookRedirectURLOptions, FacebookAuthOptions, FacebookAuthResponse } from '@exweiv/easy-auth/facebook';
+import type { facebook } from '@exweiv/easy-auth';
 // API Imports
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
@@ -9,7 +9,7 @@ import { getSecretValue } from '@exweiv/wix-secret-helpers';
 // Internal Imports
 import errCodes from '../errors';
 
-export const redirectURL = (options: FacebookRedirectURLOptions): string => {
+export const redirectURL = (options: facebook["FacebookRedirectURLOptions"]): string => {
     try {
         const { redirect_uri, client_id, response_type = 'code', scope = 'email', state = undefined } = options;
 
@@ -28,7 +28,7 @@ export const redirectURL = (options: FacebookRedirectURLOptions): string => {
     }
 }
 
-export const userAuth = async (options: FacebookAuthOptions, getClientSecret: boolean = true, access_token?: string): Promise<FacebookAuthResponse> => {
+export const userAuth = async (options: facebook["FacebookAuthOptions"], getClientSecret: boolean = true, access_token?: string): Promise<facebook["FacebookAuthResponse"]> => {
     try {
         const { client_id, client_secret, redirect_uri, code, fields } = options;
 
