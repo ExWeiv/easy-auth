@@ -39,7 +39,7 @@ export const redirectURL = (options: Facebook.RedirectURLOptions): string => {
     }
 }
 
-export const userAuth = async (options: Facebook.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
+export const authUser = async (options: Facebook.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
         const { client_id, redirect_uri, code, fields } = options;
 

@@ -57,7 +57,7 @@ declare module '@exweiv/easy-auth' {
          * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `FacebookClientSecret`.
          * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        userAuth(options: Facebook.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+        authUser(options: Facebook.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
 
         /**
          * Gets tokens for API calls to Facebook. Keep in mind Facebook has a different system for tokens. Facebook doesn't have any refresh_tokens instead you exhcnage expired tokens with new ones.
@@ -141,13 +141,34 @@ declare module '@exweiv/easy-auth' {
 
         type AuthOptions = {
             client_id: string,
-            client_secret?: string,
             redirect_uri: string,
             code: string,
             repository_id?: string
         }
+
+        type TokensOptions = {
+            client_id: string,
+            client_secret: string,
+            code?: string,
+            redirect_uri?: string,
+            repository_id?: string,
+            grant_type?: string,
+            refresh_token?: string
+        }
+
+        type TokensResponse = {
+            access_token: string,
+            expires_in: number,
+            refresh_token: string,
+            refresh_token_expires_in: number,
+            scope: string,
+            token_type: string
+        }
     }
 
+    /**
+     * Read GitHub Docs for more info about anything here.
+     */
     interface github {
         /**
          * Creates a redirect url for authenticating user via GitHub
@@ -160,9 +181,17 @@ declare module '@exweiv/easy-auth' {
          * Gets user data from GitHub
          * 
          * @param options Options that's used when getting user data from GitHub.
-         * @param getClientSecret Defaults to true when set to false you can pass your own client_secret when set to true API will try to fetch client_secret from Wix Secrets Manager, create a secret with `GitHubClientSecret` name.
+         * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `GitHubClientSecret`.
+         * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        userAuth(options: GitHub.AuthOptions, getClientSecret?: boolean): Promise<AuthResponse>;
+        authUser(options: GitHub.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+
+        /**
+         * Gets tokens for API calls to GitHub. You can refresh expired tokens using refresh tokens.
+         * 
+         * @param options Options that's used when getting tokens from GitHub
+         */
+        getTokens(options: GitHub.TokensOptions): Promise<GitHub.TokensResponse>;
     }
 
     namespace Discord {
