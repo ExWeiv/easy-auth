@@ -6,7 +6,7 @@ import type { Facebook, AuthResponse } from '@exweiv/easy-auth';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import querystring from 'querystring';
-// import { getSecretValue } from '@exweiv/wix-secret-helpers';
+import { getSecretValue } from '@exweiv/wix-secret-helpers';
 // Internal Imports
 import errCodes from '../Errors/errors';
 
@@ -15,9 +15,9 @@ export const redirectURL = (options: Facebook.RedirectURLOptions): string => {
         const {
             redirect_uri,
             client_id,
-            response_type = ['code'],
-            scope = ['email'],
-            state = { code: uuidv4() }
+            response_type,
+            scope,
+            state
         } = options;
 
         if (!redirect_uri || !client_id) {
@@ -26,11 +26,11 @@ export const redirectURL = (options: Facebook.RedirectURLOptions): string => {
 
         const rootURL = "https://www.facebook.com/v19.0/dialog/oauth";
         const urlOptions = {
-            response_type: response_type.join(","),
-            scope: scope.join(","),
+            response_type: !response_type ? ['code'] : response_type.join(","),
+            scope: !scope ? ['email'] : scope.join(","),
             redirect_uri,
             client_id,
-            state: JSON.stringify(state)
+            state: !state ? JSON.stringify({ code: uuidv4() }) : state
         }
 
         return `${rootURL}?${querystring.stringify(urlOptions)}`;
@@ -46,7 +46,7 @@ export const userAuth = async (options: Facebook.AuthOptions, getClientSecret: b
             client_secret,
             redirect_uri,
             code,
-            fields = ["email"]
+            fields
         } = options;
 
         if (getClientSecret === true) {
@@ -64,7 +64,7 @@ export const userAuth = async (options: Facebook.AuthOptions, getClientSecret: b
             const tokenRootURL = "https://graph.facebook.com/v19.0/oauth/access_token";
             const tokenURLOptions = {
                 client_id,
-                client_secret: getClientSecret ? "31" : client_secret,
+                client_secret: getClientSecret ? await getSecretValue("FacebookClientSecret") : client_secret,
                 redirect_uri,
                 code
             }
@@ -74,7 +74,7 @@ export const userAuth = async (options: Facebook.AuthOptions, getClientSecret: b
         }
 
         // Get User Data with User Token
-        const fbUserResponse = await axios.get(encodeURI(`https://graph.facebook.com/v19.0/me?fields=${fields.join(",")}&access_token=${access_token}`))
+        const fbUserResponse = await axios.get(encodeURI(`https://graph.facebook.com/v19.0/me?fields=${!fields ? "email" : fields.join(",")}&access_token=${access_token}`))
         return fbUserResponse.data;
     } catch (err) {
         throw Error(`${errCodes.prefix} ${errCodes.provider[0]} ${err}`);
