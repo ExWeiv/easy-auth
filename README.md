@@ -8,7 +8,7 @@ If you are looking for something basic for your Wix site then you can install **
 
 - Facebook ✅
 - Google ✅
-- Discord ⏳
+- Discord ✅
 - GitHub ✅
 - Steam ⏳
 
