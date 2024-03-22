@@ -56,15 +56,26 @@ declare module '@exweiv/easy-auth' {
 
         type AuthOptions = {
             client_id: string,
-            client_secret?: string,
             redirect_uri: string,
             code: string,
             grant_type?: string
         }
 
-        type Tokens = {
-            id_token: string,
-            access_token: string
+        type TokensOptions = {
+            client_id: string,
+            client_secret?: string,
+            code: string
+            grant_type?: string,
+            redirect_uri: string,
+            refresh_token?: string
+        }
+
+        type TokensResponse = {
+            access_token: string,
+            expires_in: number,
+            refresh_token: string,
+            scope: string,
+            token_type: string
         }
     }
 
@@ -80,10 +91,17 @@ declare module '@exweiv/easy-auth' {
          * Gets user data from Google
          * 
          * @param options Options that's used when getting user data from Google.
-         * @param getClientSecret Defaults to true when set to false you can pass your own client_secret when set to true API will try to fetch client_secret from Wix Secrets Manager, create a secret with `GoogleClientSecret` name.
-         * @param tokens Defaults to undefined, optionally you can pass the access_token and id_token to be used directly when making calls to Google APIs.
+         * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `GoogleClientSecret`.
+         * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        userAuth(options: Google.AuthOptions, getClientSecret?: boolean, tokens?: Google.Tokens): Promise<AuthResponse>;
+        authUser(options: Google.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+
+        /**
+         * Gets tokens for API calls to Google
+         * 
+         * @param options Options that's used when getting tokens from Google
+         */
+        getTokens(options: Google.TokensOptions): Promise<Google.TokensResponse>;
     }
 
     namespace GitHub {

@@ -5,7 +5,7 @@ import type { Google, AuthResponse } from '@exweiv/easy-auth';
 // API Imports
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-import { getSecretValue } from '@exweiv/wix-secret-helpers';
+// import { getSecretValue } from '@exweiv/wix-secret-helpers';
 import querystring from 'querystring';
 // Internal Imports
 import errCodes from '../Errors/errors';
@@ -23,7 +23,7 @@ export const redirectURL = (options: Google.RedirectURLOptions): string => {
         } = options;
 
         if (!redirect_uri || !client_id) {
-            throw Error(`${errCodes.prefix} client_id, redirect_uri and scope must be a valid value`);
+            throw Error(`${errCodes.prefix} ${errCodes.provider[1]} - client_id, redirect_uri and scope must be a valid value`);
         }
 
         const rootURL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -43,54 +43,63 @@ export const redirectURL = (options: Google.RedirectURLOptions): string => {
     }
 }
 
-export const userAuth = async (options: Google.AuthOptions, getClientSecret: boolean = true, tokens?: Google.Tokens): Promise<AuthResponse> => {
+export const authUser = async (options: Google.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
-        const { client_id, client_secret, redirect_uri, code, grant_type = "authorization_code" } = options;
+        const { client_id, redirect_uri, code, grant_type } = options;
 
-        if (getClientSecret === true) {
-            if (!client_id || !redirect_uri || !code) {
-                throw Error(`${errCodes.prefix} ${errCodes.provider[1]} - client_id, redirect_uri and code must be a valid value!`);
-            }
-        } else {
-            if (!client_id || !client_secret || !redirect_uri || !code) {
-                throw Error(`${errCodes.prefix} ${errCodes.provider[1]} - client_id, client_secret, redirect_uri and code must be a valid value!`);
-            }
+        if (!client_id || !redirect_uri || !code) {
+            throw Error(`${errCodes.prefix} ${errCodes.provider[1]} - client_id, redirect_uri and code must be a valid value!`);
         }
 
-        if (!tokens) {
-            const tokenRootURL = "https://oauth2.googleapis.com/token";
-            const tokenURLOptions = {
-                client_secret: getClientSecret ? await getSecretValue("GoogleClientSecret") : client_secret,
+        if (!access_token) {
+            const tokens = await getTokens({
+                client_secret: !client_secret ? `await getSecretValue("GoogleClientSecret")` : client_secret,
                 redirect_uri,
-                grant_type,
                 client_id,
-                code
-            }
-
-            const tokenResponse = await axios.post(tokenRootURL, querystring.stringify(tokenURLOptions), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                }
+                code,
+                grant_type
             })
-
-            tokens = {
-                access_token: tokenResponse.data.access_token,
-                id_token: tokenResponse.data.id_token
-            };
+            access_token = tokens.access_token;
         }
 
-        const googleUserResponse = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.access_token}`, {
-            headers: {
-                "Authorization": `Bearer ${tokens.id_token}`
-            }
-        });
+        const googleUserResponse = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`);
         return googleUserResponse.data;
     } catch (err) {
         throw Error(`${errCodes.prefix} ${errCodes.provider[1]} - ${err}`);
     }
 }
 
-export default {
-    redirectURL,
-    userAuth
+export const getTokens = async (options: Google.TokensOptions): Promise<Google.TokensResponse> => {
+    try {
+        const {
+            client_id,
+            client_secret,
+            code,
+            grant_type,
+            redirect_uri,
+            refresh_token
+        } = options;
+
+        const tokenParams = new URLSearchParams({
+            grant_type: !grant_type ? "authorization_code" : grant_type,
+            client_secret: !client_secret ? `await getSecretValue("GoogleClientSecret")` : client_secret,
+            redirect_uri,
+            client_id,
+            code
+        });
+
+        if (refresh_token) {
+            tokenParams.append("refresh_token", refresh_token);
+        }
+
+        const tokens = await axios.post("https://oauth2.googleapis.com/token", tokenParams, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        });
+
+        return tokens.data;
+    } catch (err) {
+        throw Error(`${errCodes.prefix} ${errCodes.provider[1]} - ${err}`);
+    }
 }
