@@ -1,6 +1,7 @@
 import facebookAPIs from './Facebook/facebook';
 import googleAPIs from './Google/google';
 import githubAPIs from './GitHub/github';
+import discordAPIs from './Discord/discord';
 
 export const facebook = {
     redirectURL: facebookAPIs.redirectURL,
@@ -17,8 +18,14 @@ export const github = {
     userAuth: githubAPIs.userAuth
 }
 
+export const discord = {
+    redirectURL: discordAPIs.redirectURL,
+    userAuth: discordAPIs.userAuth
+}
+
 export default {
     facebook,
     google,
-    github
+    github,
+    discord
 }
