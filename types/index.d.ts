@@ -208,14 +208,33 @@ declare module '@exweiv/easy-auth' {
             redirect_uri: string,
             code: string,
             grant_type?: string,
+            client_id: string,
+        }
+
+        type TokensOptions = {
             client_secret: string,
             client_id: string,
+            grant_type?: string,
+            redirect_uri?: string,
+            code?: string,
+            refresh_token?: string
+        }
+
+        type TokensResponse = {
+            access_token: string,
+            token_type: string,
+            expires_in: number,
+            scope: string,
+            refresh_token: string
         }
     }
 
+    /**
+     * Read Discord Docs for more info about anything here.
+     */
     interface discord {
         /**
-         * Creates a redirect url for authenticating user via GitHub
+         * Creates a redirect url for authenticating user via Discord
          * 
          * @param options Options that's used when creating redirect url.
          */
@@ -225,9 +244,16 @@ declare module '@exweiv/easy-auth' {
          * Gets user data from Discord
          * 
          * @param options Options that's used when getting user data from Discord.
-         * @param getClientSecret Defaults to true when set to false you can pass your own client_secret when set to true API will try to fetch client_secret from Wix Secrets Manager, create a secret with `DiscordClientSecret` name.
-         * @param access_token Defaults to undefined, but if you want to set a saved access_token then API will use the passed token for user data call.
+         * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `DiscordClientSecret`.
+         * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        userAuth(options: Discord.AuthOptions, getClientSecret?: boolean, access_token?: string): Promise<AuthResponse>;
+        userAuth(options: Discord.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+
+        /**
+         * Gets tokens for API calls to Discord. You can refresh expired tokens using refresh tokens.
+         * 
+         * @param options Options that's used when getting tokens from Discord
+         */
+        getTokens(options: Discord.TokensOptions): Promise<Discord.TokensResponse>;
     }
 }

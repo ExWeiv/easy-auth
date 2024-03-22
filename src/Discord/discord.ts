@@ -41,32 +41,24 @@ export const redirectURL = (options: Discord.RedirectURLOptions): string => {
     }
 }
 
-export const userAuth = async (options: Discord.AuthOptions, getClientSecret: boolean = true, access_token?: string): Promise<AuthResponse> => {
+export const authUser = async (options: Discord.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
         const {
             code,
             redirect_uri,
             grant_type,
             client_id,
-            client_secret,
         } = options;
 
         if (!access_token) {
-            const tokenRootURL = "https://discord.com/api/oauth2/token";
-            const tokenURLOptions = new URLSearchParams({
-                code,
+            const tokens = await getTokens({
+                client_secret: !client_secret ? await getSecretValue("DiscordClientSecret") : client_secret,
+                client_id,
                 redirect_uri,
                 grant_type: !grant_type ? "authorization_code" : grant_type,
-                client_secret: getClientSecret ? await getSecretValue("DiscordClientSecret") : client_secret,
-                client_id
+                code
             });
-
-            const tokenResponse = await axios.post(tokenRootURL, tokenURLOptions, {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                }
-            });
-            access_token = tokenResponse.data.access_token;
+            access_token = tokens.access_token;
         }
 
 
@@ -81,7 +73,21 @@ export const userAuth = async (options: Discord.AuthOptions, getClientSecret: bo
     }
 }
 
-export default {
-    redirectURL,
-    userAuth
+export const getTokens = async (options: Discord.TokensOptions): Promise<Discord.TokensResponse> => {
+    try {
+        const tokenParams = new URLSearchParams();
+
+        for (const [key, value] of Object.entries(options)) {
+            tokenParams.append(key, value);
+        }
+
+        const tokens = await axios.post("https://discord.com/api/oauth2/token", tokenParams, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        })
+        return tokens.data;
+    } catch (err) {
+        throw Error(`${errCodes.prefix} ${errCodes.provider[3]} - ${err}`);
+    }
 }
