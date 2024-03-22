@@ -39,41 +39,24 @@ export const redirectURL = (options: Facebook.RedirectURLOptions): string => {
     }
 }
 
-export const userAuth = async (options: Facebook.AuthOptions, getClientSecret: boolean = true, access_token?: string): Promise<AuthResponse> => {
+export const authUser = async (options: Facebook.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
-        const {
-            client_id,
-            client_secret,
-            redirect_uri,
-            code,
-            fields
-        } = options;
+        const { client_id, redirect_uri, code, fields } = options;
 
-        if (getClientSecret === true) {
-            if (!client_id || !redirect_uri || !code) {
-                throw Error(`${errCodes.prefix} ${errCodes.provider[0]} - client_id and redirect_uri must be a valid value!`);
-            }
-        } else {
-            if (!client_id || !client_secret || !redirect_uri || !code) {
-                throw Error(`${errCodes.prefix} ${errCodes.provider[0]} - client_id, client_secret and redirect_uri must be a valid value!`);
-            }
+        if (!client_id || !redirect_uri) {
+            throw Error(`${errCodes.prefix} ${errCodes.provider[0]} - client_id and redirect_uri must be a valid value!`);
         }
 
-        // Get User Access Token
         if (!access_token) {
-            const tokenRootURL = "https://graph.facebook.com/v19.0/oauth/access_token";
-            const tokenURLOptions = {
+            const tokens = await getTokens({
+                client_secret: !client_secret ? await getSecretValue("FacebookClientSecret") : client_secret,
                 client_id,
-                client_secret: getClientSecret ? await getSecretValue("FacebookClientSecret") : client_secret,
                 redirect_uri,
                 code
-            }
-
-            const fbTokenResponse = await axios.post(tokenRootURL, querystring.stringify(tokenURLOptions));
-            access_token = fbTokenResponse.data.access_token;
+            });
+            access_token = tokens.access_token;
         }
 
-        // Get User Data with User Token
         const fbUserResponse = await axios.get(encodeURI(`https://graph.facebook.com/v19.0/me?fields=${!fields ? "email" : fields.join(",")}&access_token=${access_token}`))
         return fbUserResponse.data;
     } catch (err) {
@@ -81,7 +64,35 @@ export const userAuth = async (options: Facebook.AuthOptions, getClientSecret: b
     }
 }
 
-export default {
-    redirectURL,
-    userAuth
+export const getTokens = async (options: Facebook.TokensOptions): Promise<Facebook.TokensResponse> => {
+    try {
+        const {
+            client_id,
+            client_secret,
+            redirect_uri,
+            code,
+            fb_exchange_token,
+            grant_type
+        } = options;
+
+        const tokenParams = new URLSearchParams({
+            client_id,
+            client_secret: !client_secret ? await getSecretValue("GoogleClientSecret") : client_secret,
+        });
+
+        if (redirect_uri)
+            tokenParams.append("redirect_uri", redirect_uri);
+        if (code)
+            tokenParams.append("code", code);
+        if (fb_exchange_token)
+            tokenParams.append("fb_exchange_token", fb_exchange_token);
+        if (grant_type) {
+            tokenParams.append("grant_type", grant_type);
+        }
+
+        const tokens = await axios.post("https://graph.facebook.com/v19.0/oauth/access_token", tokenParams);
+        return tokens.data;
+    } catch (err) {
+        throw Error(`${errCodes.prefix} ${errCodes.provider[0]} ${err}`);
+    }
 }

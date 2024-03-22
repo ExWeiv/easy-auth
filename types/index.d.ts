@@ -18,13 +18,30 @@ declare module '@exweiv/easy-auth' {
 
         type AuthOptions = {
             client_id: string,
-            client_secret?: string,
             redirect_uri: string,
             code?: string,
             fields?: string[]
         }
+
+        type TokensOptions = {
+            client_id: string,
+            client_secret: string,
+            grant_type?: string,
+            redirect_uri?: string,
+            code?: string,
+            fb_exchange_token?: string
+        }
+
+        type TokensResponse = {
+            access_token: string,
+            token_type: string,
+            expires_in: number
+        }
     }
 
+    /**
+     * Read Facebook Docs for more info about anything here.
+     */
     interface facebook {
         /**
          * Creates a redirect url for authenticating user via Facebook
@@ -37,10 +54,17 @@ declare module '@exweiv/easy-auth' {
          * Gets user data from Facebook
          * 
          * @param options Options that's used when getting user data from Facebook.
-         * @param getClientSecret Defaults to true when set to false you can pass your own client_secret when set to true API will try to fetch client_secret from Wix Secrets Manager, create a secret with `FacebookClientSecret` name.
-         * @param access_token Defaults to undefined, when you pass a access_token this access_token will be used when getting user data. Otherwise API will generate new one.
+         * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `FacebookClientSecret`.
+         * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        userAuth(options: Facebook.AuthOptions, getClientSecret?: boolean, access_token?: string): Promise<AuthResponse>;
+        authUser(options: Facebook.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+
+        /**
+         * Gets tokens for API calls to Facebook. Keep in mind Facebook has a different system for tokens. Facebook doesn't have any refresh_tokens instead you exhcnage expired tokens with new ones.
+         * 
+         * @param options Options that's used when getting tokens from Facebook
+         */
+        getTokens(options: Facebook.TokensOptions): Promise<Facebook.TokensResponse>;
     }
 
     namespace Google {
@@ -56,18 +80,32 @@ declare module '@exweiv/easy-auth' {
 
         type AuthOptions = {
             client_id: string,
-            client_secret?: string,
             redirect_uri: string,
             code: string,
             grant_type?: string
         }
 
-        type Tokens = {
-            id_token: string,
-            access_token: string
+        type TokensOptions = {
+            client_id: string,
+            client_secret?: string,
+            code: string
+            grant_type?: string,
+            redirect_uri: string,
+            refresh_token?: string
+        }
+
+        type TokensResponse = {
+            access_token: string,
+            expires_in: number,
+            refresh_token: string,
+            scope: string,
+            token_type: string
         }
     }
 
+    /**
+     * Read Google Docs for more info about anything here.
+     */
     interface google {
         /**
          * Creates a redirect url for authenticating user via Google
@@ -80,10 +118,17 @@ declare module '@exweiv/easy-auth' {
          * Gets user data from Google
          * 
          * @param options Options that's used when getting user data from Google.
-         * @param getClientSecret Defaults to true when set to false you can pass your own client_secret when set to true API will try to fetch client_secret from Wix Secrets Manager, create a secret with `GoogleClientSecret` name.
-         * @param tokens Defaults to undefined, optionally you can pass the access_token and id_token to be used directly when making calls to Google APIs.
+         * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `GoogleClientSecret`.
+         * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        userAuth(options: Google.AuthOptions, getClientSecret?: boolean, tokens?: Google.Tokens): Promise<AuthResponse>;
+        authUser(options: Google.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+
+        /**
+         * Gets tokens for API calls to Google. You can refresh expired tokens using refresh tokens.
+         * 
+         * @param options Options that's used when getting tokens from Google
+         */
+        getTokens(options: Google.TokensOptions): Promise<Google.TokensResponse>;
     }
 
     namespace GitHub {
@@ -96,13 +141,34 @@ declare module '@exweiv/easy-auth' {
 
         type AuthOptions = {
             client_id: string,
-            client_secret?: string,
             redirect_uri: string,
             code: string,
             repository_id?: string
         }
+
+        type TokensOptions = {
+            client_id: string,
+            client_secret: string,
+            code?: string,
+            redirect_uri?: string,
+            repository_id?: string,
+            grant_type?: string,
+            refresh_token?: string
+        }
+
+        type TokensResponse = {
+            access_token: string,
+            expires_in: number,
+            refresh_token: string,
+            refresh_token_expires_in: number,
+            scope: string,
+            token_type: string
+        }
     }
 
+    /**
+     * Read GitHub Docs for more info about anything here.
+     */
     interface github {
         /**
          * Creates a redirect url for authenticating user via GitHub
@@ -115,9 +181,17 @@ declare module '@exweiv/easy-auth' {
          * Gets user data from GitHub
          * 
          * @param options Options that's used when getting user data from GitHub.
-         * @param getClientSecret Defaults to true when set to false you can pass your own client_secret when set to true API will try to fetch client_secret from Wix Secrets Manager, create a secret with `GitHubClientSecret` name.
+         * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `GitHubClientSecret`.
+         * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        userAuth(options: GitHub.AuthOptions, getClientSecret?: boolean): Promise<AuthResponse>;
+        authUser(options: GitHub.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+
+        /**
+         * Gets tokens for API calls to GitHub. You can refresh expired tokens using refresh tokens.
+         * 
+         * @param options Options that's used when getting tokens from GitHub
+         */
+        getTokens(options: GitHub.TokensOptions): Promise<GitHub.TokensResponse>;
     }
 
     namespace Discord {
@@ -134,14 +208,33 @@ declare module '@exweiv/easy-auth' {
             redirect_uri: string,
             code: string,
             grant_type?: string,
+            client_id: string,
+        }
+
+        type TokensOptions = {
             client_secret: string,
             client_id: string,
+            grant_type?: string,
+            redirect_uri?: string,
+            code?: string,
+            refresh_token?: string
+        }
+
+        type TokensResponse = {
+            access_token: string,
+            token_type: string,
+            expires_in: number,
+            scope: string,
+            refresh_token: string
         }
     }
 
+    /**
+     * Read Discord Docs for more info about anything here.
+     */
     interface discord {
         /**
-         * Creates a redirect url for authenticating user via GitHub
+         * Creates a redirect url for authenticating user via Discord
          * 
          * @param options Options that's used when creating redirect url.
          */
@@ -151,9 +244,16 @@ declare module '@exweiv/easy-auth' {
          * Gets user data from Discord
          * 
          * @param options Options that's used when getting user data from Discord.
-         * @param getClientSecret Defaults to true when set to false you can pass your own client_secret when set to true API will try to fetch client_secret from Wix Secrets Manager, create a secret with `DiscordClientSecret` name.
-         * @param access_token Defaults to undefined, but if you want to set a saved access_token then API will use the passed token for user data call.
+         * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `DiscordClientSecret`.
+         * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        userAuth(options: Discord.AuthOptions, getClientSecret?: boolean, access_token?: string): Promise<AuthResponse>;
+        userAuth(options: Discord.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+
+        /**
+         * Gets tokens for API calls to Discord. You can refresh expired tokens using refresh tokens.
+         * 
+         * @param options Options that's used when getting tokens from Discord
+         */
+        getTokens(options: Discord.TokensOptions): Promise<Discord.TokensResponse>;
     }
 }

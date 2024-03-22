@@ -37,35 +37,25 @@ export const redirectURL = (options: GitHub.RedirectURLOptions): string => {
     }
 }
 
-export const userAuth = async (options: GitHub.AuthOptions, getClientSecret: boolean = true): Promise<AuthResponse> => {
+export const authUser = async (options: GitHub.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
         const {
             client_id,
-            client_secret,
             code,
             redirect_uri,
             repository_id
         } = options;
 
-        const tokenRootURL = "https://github.com/login/oauth/access_token";
-        const tokenURLOptions = {
-            client_id,
-            client_secret: getClientSecret != true ? client_secret : await getSecretValue("GitHubClientSecret"),
-            code,
-            redirect_uri,
-            repository_id
-        };
-
-        if (!repository_id) {
-            delete tokenURLOptions.repository_id;
+        if (!access_token) {
+            const tokens = await getTokens({
+                client_secret: !client_secret ? await getSecretValue("GitHubClientSecret") : client_secret,
+                client_id,
+                code,
+                redirect_uri,
+                repository_id
+            });
+            access_token = tokens.access_token;
         }
-
-        const tokenResponse = await axios.post(tokenRootURL, querystring.stringify(tokenURLOptions), {
-            headers: {
-                "Accept": "application/json"
-            }
-        });
-        const { access_token } = tokenResponse.data;
 
         const githubUserResponse = await axios.get(`https://api.github.com/user`, {
             headers: {
@@ -80,7 +70,21 @@ export const userAuth = async (options: GitHub.AuthOptions, getClientSecret: boo
     }
 }
 
-export default {
-    redirectURL,
-    userAuth
+export const getTokens = async (options: GitHub.TokensOptions): Promise<GitHub.TokensResponse> => {
+    try {
+        const tokenParams = new URLSearchParams();
+
+        for (const [key, value] of Object.entries(options)) {
+            tokenParams.append(key, value);
+        }
+
+        const tokens = await axios.post("https://github.com/login/oauth/access_token", tokenParams, {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+        return tokens.data;
+    } catch (err) {
+        throw Error(`${errCodes.prefix} ${errCodes.provider[2]} - ${err}`);
+    }
 }
