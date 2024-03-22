@@ -85,4 +85,38 @@ declare module '@exweiv/easy-auth' {
          */
         userAuth(options: Google.AuthOptions, getClientSecret?: boolean, tokens?: Google.Tokens): Promise<AuthResponse>;
     }
+
+    namespace GitHub {
+        type RedirectURLOptions = {
+            redirect_uri: string,
+            client_id: string,
+            state?: string,
+            allow_signup?: boolean
+        }
+
+        type AuthOptions = {
+            client_id: string,
+            client_secret?: string,
+            redirect_uri: string,
+            code: string,
+            repository_id?: string
+        }
+    }
+
+    interface github {
+        /**
+         * Creates a redirect url for authenticating user via GitHub
+         * 
+         * @param options Options that's used when creating redirect url.
+         */
+        redirectURL(options: GitHub.RedirectURLOptions): string;
+
+        /**
+         * Gets user data from GitHub
+         * 
+         * @param options Options that's used when getting user data from GitHub.
+         * @param getClientSecret Defaults to true when set to false you can pass your own client_secret when set to true API will try to fetch client_secret from Wix Secrets Manager, create a secret with `GitHubClientSecret` name.
+         */
+        userAuth(options: GitHub.AuthOptions, getClientSecret?: boolean): Promise<AuthResponse>;
+    }
 }

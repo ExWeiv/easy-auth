@@ -5,7 +5,7 @@ import type { Google, AuthResponse } from '@exweiv/easy-auth';
 // API Imports
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-// import { getSecretValue } from '@exweiv/wix-secret-helpers';
+import { getSecretValue } from '@exweiv/wix-secret-helpers';
 import querystring from 'querystring';
 // Internal Imports
 import errCodes from '../Errors/errors';
@@ -15,11 +15,11 @@ export const redirectURL = (options: Google.RedirectURLOptions): string => {
         const {
             redirect_uri,
             client_id,
-            response_type = 'code',
-            scope = ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"],
-            state = { code: uuidv4() },
-            access_type = "offline",
-            prompt = "consent"
+            response_type,
+            scope,
+            state,
+            access_type,
+            prompt
         } = options;
 
         if (!redirect_uri || !client_id) {
@@ -30,11 +30,11 @@ export const redirectURL = (options: Google.RedirectURLOptions): string => {
         const urlOptions = {
             redirect_uri,
             client_id,
-            access_type,
-            response_type,
-            prompt,
-            scope: scope.join(" "),
-            state: JSON.stringify(state)
+            access_type: !access_type ? "offline" : access_type,
+            response_type: !response_type ? "code" : response_type,
+            prompt: !prompt ? "consent" : prompt,
+            scope: !scope ? ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"].join(" ") : scope.join(" "),
+            state: !state ? JSON.stringify({ code: uuidv4() }) : state
         }
 
         return `${rootURL}?${querystring.stringify(urlOptions)}`;
@@ -60,7 +60,7 @@ export const userAuth = async (options: Google.AuthOptions, getClientSecret: boo
         if (!tokens) {
             const tokenRootURL = "https://oauth2.googleapis.com/token";
             const tokenURLOptions = {
-                client_secret: getClientSecret ? "31" : client_secret,
+                client_secret: getClientSecret ? await getSecretValue("GoogleClientSecret") : client_secret,
                 redirect_uri,
                 grant_type,
                 client_id,
@@ -84,7 +84,6 @@ export const userAuth = async (options: Google.AuthOptions, getClientSecret: boo
                 "Authorization": `Bearer ${tokens.id_token}`
             }
         });
-
         return googleUserResponse.data;
     } catch (err) {
         throw Error(`${errCodes.prefix} ${errCodes.provider[1]} - ${err}`);

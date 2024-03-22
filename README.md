@@ -10,6 +10,7 @@ If you are looking for something basic for your Wix site then you can install **
 - Google ⏳
 - Discord ⏳
 - GitHub ⏳
+- Steam ⏳
 
 **We are planning to add:**
 
