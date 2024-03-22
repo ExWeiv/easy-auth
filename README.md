@@ -6,10 +6,10 @@ If you are looking for something basic for your Wix site then you can install **
 
 **Currently this package handles OAuth for:**
 
-- Facebook ⏳
-- Google ⏳
+- Facebook ✅
+- Google ✅
 - Discord ⏳
-- GitHub ⏳
+- GitHub ✅
 - Steam ⏳
 
 **We are planning to add:**
