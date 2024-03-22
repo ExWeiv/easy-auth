@@ -18,13 +18,30 @@ declare module '@exweiv/easy-auth' {
 
         type AuthOptions = {
             client_id: string,
-            client_secret?: string,
             redirect_uri: string,
             code?: string,
             fields?: string[]
         }
+
+        type TokensOptions = {
+            client_id: string,
+            client_secret: string,
+            grant_type?: string,
+            redirect_uri?: string,
+            code?: string,
+            fb_exchange_token?: string
+        }
+
+        type TokensResponse = {
+            access_token: string,
+            token_type: string,
+            expires_in: number
+        }
     }
 
+    /**
+     * Read Facebook Docs for more info about anything here.
+     */
     interface facebook {
         /**
          * Creates a redirect url for authenticating user via Facebook
@@ -37,10 +54,17 @@ declare module '@exweiv/easy-auth' {
          * Gets user data from Facebook
          * 
          * @param options Options that's used when getting user data from Facebook.
-         * @param getClientSecret Defaults to true when set to false you can pass your own client_secret when set to true API will try to fetch client_secret from Wix Secrets Manager, create a secret with `FacebookClientSecret` name.
-         * @param access_token Defaults to undefined, when you pass a access_token this access_token will be used when getting user data. Otherwise API will generate new one.
+         * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `FacebookClientSecret`.
+         * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        userAuth(options: Facebook.AuthOptions, getClientSecret?: boolean, access_token?: string): Promise<AuthResponse>;
+        userAuth(options: Facebook.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+
+        /**
+         * Gets tokens for API calls to Facebook. Keep in mind Facebook has a different system for tokens. Facebook doesn't have any refresh_tokens instead you exhcnage expired tokens with new ones.
+         * 
+         * @param options Options that's used when getting tokens from Facebook
+         */
+        getTokens(options: Facebook.TokensOptions): Promise<Facebook.TokensResponse>;
     }
 
     namespace Google {
@@ -79,6 +103,9 @@ declare module '@exweiv/easy-auth' {
         }
     }
 
+    /**
+     * Read Google Docs for more info about anything here.
+     */
     interface google {
         /**
          * Creates a redirect url for authenticating user via Google
@@ -97,7 +124,7 @@ declare module '@exweiv/easy-auth' {
         authUser(options: Google.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
 
         /**
-         * Gets tokens for API calls to Google
+         * Gets tokens for API calls to Google. You can refresh expired tokens using refresh tokens.
          * 
          * @param options Options that's used when getting tokens from Google
          */

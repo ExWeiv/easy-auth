@@ -5,7 +5,7 @@ import type { Google, AuthResponse } from '@exweiv/easy-auth';
 // API Imports
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-// import { getSecretValue } from '@exweiv/wix-secret-helpers';
+import { getSecretValue } from '@exweiv/wix-secret-helpers';
 import querystring from 'querystring';
 // Internal Imports
 import errCodes from '../Errors/errors';
@@ -53,7 +53,7 @@ export const authUser = async (options: Google.AuthOptions, client_secret?: stri
 
         if (!access_token) {
             const tokens = await getTokens({
-                client_secret: !client_secret ? `await getSecretValue("GoogleClientSecret")` : client_secret,
+                client_secret: !client_secret ? await getSecretValue("GoogleClientSecret") : client_secret,
                 redirect_uri,
                 client_id,
                 code,
@@ -82,7 +82,7 @@ export const getTokens = async (options: Google.TokensOptions): Promise<Google.T
 
         const tokenParams = new URLSearchParams({
             grant_type: !grant_type ? "authorization_code" : grant_type,
-            client_secret: !client_secret ? `await getSecretValue("GoogleClientSecret")` : client_secret,
+            client_secret: !client_secret ? await getSecretValue("GoogleClientSecret") : client_secret,
             redirect_uri,
             client_id,
             code
