@@ -119,4 +119,41 @@ declare module '@exweiv/easy-auth' {
          */
         userAuth(options: GitHub.AuthOptions, getClientSecret?: boolean): Promise<AuthResponse>;
     }
+
+    namespace Discord {
+        type RedirectURLOptions = {
+            redirect_uri: string,
+            client_id: string,
+            state?: string,
+            response_type?: string,
+            prompt?: string,
+            scope?: string[]
+        }
+
+        type AuthOptions = {
+            redirect_uri: string,
+            code: string,
+            grant_type?: string,
+            client_secret: string,
+            client_id: string,
+        }
+    }
+
+    interface discord {
+        /**
+         * Creates a redirect url for authenticating user via GitHub
+         * 
+         * @param options Options that's used when creating redirect url.
+         */
+        redirectURL(options: Discord.RedirectURLOptions): string;
+
+        /**
+         * Gets user data from Discord
+         * 
+         * @param options Options that's used when getting user data from Discord.
+         * @param getClientSecret Defaults to true when set to false you can pass your own client_secret when set to true API will try to fetch client_secret from Wix Secrets Manager, create a secret with `DiscordClientSecret` name.
+         * @param access_token Defaults to undefined, but if you want to set a saved access_token then API will use the passed token for user data call.
+         */
+        userAuth(options: Discord.AuthOptions, getClientSecret?: boolean, access_token?: string): Promise<AuthResponse>;
+    }
 }

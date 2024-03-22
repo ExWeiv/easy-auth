@@ -5,7 +5,7 @@ import type { GitHub, AuthResponse } from '@exweiv/easy-auth';
 // API Imports
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-// import { getSecretValue } from '@exweiv/wix-secret-helpers';
+import { getSecretValue } from '@exweiv/wix-secret-helpers';
 import querystring from 'querystring';
 // Internal Imports
 import errCodes from '../Errors/errors';
@@ -50,7 +50,7 @@ export const userAuth = async (options: GitHub.AuthOptions, getClientSecret: boo
         const tokenRootURL = "https://github.com/login/oauth/access_token";
         const tokenURLOptions = {
             client_id,
-            client_secret: getClientSecret != true ? client_secret : `await getSecretValue("GitHubClientSecret")`,
+            client_secret: getClientSecret != true ? client_secret : await getSecretValue("GitHubClientSecret"),
             code,
             redirect_uri,
             repository_id
