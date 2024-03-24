@@ -10,7 +10,7 @@ If you are looking for something basic for your Wix site then you can install **
 - Google ✅
 - Discord ✅
 - GitHub ✅
-- Steam ✅
+- Steam ✅ (Read Below)
 
 **We are planning to add:**
 
@@ -23,6 +23,14 @@ If you are looking for something basic for your Wix site then you can install **
 We are on the way of creating a documentation, but it's not available right now. But we have auto-complete and TS support if you have enabled Git integration in your Wix website then you'll see integrated examples and docs with auto-completes.
 
 Check out our YouTube Channel for tutorials.
+
+### About Steam OAuth Process
+
+Steam is not providing any actual oauth flow, there isn't any official API to handle auth process with Steam, instead you have openid which plays a role as another 3rd party provider to handle authentication with Steam. But main problem with that is passing state with this option is not possible. Which means a big security issue when you are dealing with auth process.
+
+You'll have two functions, first is `redirectURL` second is `authUser` which is also possible with other providers but! issue here is as we said you can't pass a state and you won't get any token as response what you'll get is the Steam user id (a public info of any steam user) and you'll make a call to Steam web API to get the public data of user like profile photo nickname etc.
+
+You'll need to find a way to verify logins/users like what we do with states.
 
 ---
 
