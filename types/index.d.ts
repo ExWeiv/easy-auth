@@ -256,4 +256,38 @@ declare module '@exweiv/easy-auth' {
          */
         getTokens(options: Discord.TokensOptions): Promise<Discord.TokensResponse>;
     }
+
+    namespace Steam {
+        type RedirectURLOptions = {
+            realm: string,
+            redirect_uri: string,
+            state?: string
+        }
+
+        type AuthOptions = {
+            steamId: string
+        }
+    }
+
+    /**
+     * Steam itself doesn't provide any OAuth 2.0 or something similar to authenticate users with their APIs. You'll need to implement a secure way to authenticate users via Steam.
+     * This isn't a realy OAuth 2.0 method since you won't get any access_token after user sign-in to Steam, what you'll get is users's public Steam ID (number).
+     * That you can use to get public info of that user after successful login.
+     */
+    interface steam {
+        /**
+         * Creates a redirect url for authenticating user via Steam
+         * 
+         * @param options Options that's used when creating redirect url.
+         */
+        redirectURL(options: Steam.RedirectURLOptions): string;
+
+        /**
+         * Gets user data from Steam
+         * 
+         * @param options Options that's used when getting user data from Steam.
+         * @param client_secret Defaults to undefined, if you don't pass a client_secret (apiKey) API will use Wix Secret Manager to find client_secret named as `SteamClientSecret`.
+         */
+        userAuth(options: Steam.AuthOptions, client_secret?: string): Promise<AuthResponse>;
+    }
 }
