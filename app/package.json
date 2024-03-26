@@ -1,6 +1,6 @@
 {
   "name": "@exweiv/easy-auth",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Integrate popular OAuth apps with your Wix website easily.",
   "main": "./lib/index.js",
   "scripts": {
@@ -53,6 +53,5 @@
     "@types/uuid": "^9.0.8",
     "typedoc": "^0.25.12",
     "typedoc-plugin-extras": "^3.0.0"
-  },
-  "readme": "https://raw.githubusercontent.com/ExWeiv/easy-auth/main/README.md"
+  }
 }
