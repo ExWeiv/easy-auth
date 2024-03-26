@@ -4,7 +4,7 @@
   "description": "Integrate popular OAuth apps with your Wix website easily.",
   "main": "./lib/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc & npx typedoc --favicon https://static.wixstatic.com/media/510eca_9c4238093ad44527867402ae5fc8d7dd~mv2.png --footerLastModified true"
   },
   "types": "./types/index.d.ts",
   "keywords": [
@@ -50,6 +50,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
-    "@types/uuid": "^9.0.8"
+    "@types/uuid": "^9.0.8",
+    "typedoc": "^0.25.12",
+    "typedoc-plugin-extras": "^3.0.0"
   }
 }

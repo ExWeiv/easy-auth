@@ -1,0 +1,16 @@
+{
+    "out": "../docs",
+    "theme": "default",
+    "exclude": [
+        "node_modules/**/*",
+        "lib/**/*",
+    ],
+    "name": "Easy Auth API Reference | ExWeiv Apps",
+    "readme": "../DOCS.md",
+    "entryPoints": [
+        "types/index.d.ts"
+    ],
+    "plugin": [
+        "typedoc-plugin-extras"
+    ]
+}
