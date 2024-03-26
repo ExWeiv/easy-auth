@@ -53,5 +53,6 @@
     "@types/uuid": "^9.0.8",
     "typedoc": "^0.25.12",
     "typedoc-plugin-extras": "^3.0.0"
-  }
+  },
+  "readme": "../README.md"
 }
