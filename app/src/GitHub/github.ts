@@ -1,7 +1,7 @@
 /// <reference path="../../types/index.d.ts" />
 
 // Type Imports
-import type { GitHub, AuthResponse } from '@exweiv/easy-auth';
+import type { github, AuthResponse } from '@exweiv/easy-auth';
 // API Imports
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import querystring from 'querystring';
 // Internal Imports
 import errCodes from '../Errors/errors';
 
-export const redirectURL = (options: GitHub.RedirectURLOptions): string => {
+export const redirectURL = (options: github.RedirectURLOptions): string => {
     try {
         const {
             client_id,
@@ -37,7 +37,7 @@ export const redirectURL = (options: GitHub.RedirectURLOptions): string => {
     }
 }
 
-export const authUser = async (options: GitHub.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
+export const authUser = async (options: github.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
         const {
             client_id,
@@ -61,7 +61,7 @@ export const authUser = async (options: GitHub.AuthOptions, client_secret?: stri
             headers: {
                 "Accept": "application/vnd.github+json",
                 "Authorization": `Bearer ${access_token}`,
-                "X-GitHub-Api-Version": "2022-11-28"
+                "X-github-Api-Version": "2022-11-28"
             }
         });
         return githubUserResponse.data;
@@ -70,7 +70,7 @@ export const authUser = async (options: GitHub.AuthOptions, client_secret?: stri
     }
 }
 
-export const getTokens = async (options: GitHub.TokensOptions): Promise<GitHub.TokensResponse> => {
+export const getTokens = async (options: github.TokensOptions): Promise<github.TokensResponse> => {
     try {
         const tokenParams = new URLSearchParams();
 

@@ -1,7 +1,7 @@
 /// <reference path="../../types/index.d.ts" />
 
 // Type Imports
-import type { Discord, AuthResponse } from '@exweiv/easy-auth';
+import type { discord, AuthResponse } from '@exweiv/easy-auth';
 // API Imports
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import { getSecretValue } from '@exweiv/wix-secret-helpers';
 // Internal Imports
 import errCodes from '../Errors/errors';
 
-export const redirectURL = (options: Discord.RedirectURLOptions): string => {
+export const redirectURL = (options: discord.RedirectURLOptions): string => {
     try {
         const {
             client_id,
@@ -41,7 +41,7 @@ export const redirectURL = (options: Discord.RedirectURLOptions): string => {
     }
 }
 
-export const authUser = async (options: Discord.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
+export const authUser = async (options: discord.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
         const {
             code,
@@ -73,7 +73,7 @@ export const authUser = async (options: Discord.AuthOptions, client_secret?: str
     }
 }
 
-export const getTokens = async (options: Discord.TokensOptions): Promise<Discord.TokensResponse> => {
+export const getTokens = async (options: discord.TokensOptions): Promise<discord.TokensResponse> => {
     try {
         const tokenParams = new URLSearchParams();
 

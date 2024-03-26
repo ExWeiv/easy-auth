@@ -46,7 +46,7 @@ const authUser = async (options, client_secret, access_token) => {
             headers: {
                 "Accept": "application/vnd.github+json",
                 "Authorization": `Bearer ${access_token}`,
-                "X-GitHub-Api-Version": "2022-11-28"
+                "X-github-Api-Version": "2022-11-28"
             }
         });
         return githubUserResponse.data;
