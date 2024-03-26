@@ -37,7 +37,7 @@ jobs:
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_EASY_AUTH_EXWEIV_APPS }}"
-          projectId: easy-auth
+          projectId: easy-auth-exweiv-apps
           channelId: live
 
   publish_to_npm:
