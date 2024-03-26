@@ -23,10 +23,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.oauth = exports.steam = exports.github = exports.discord = exports.facebook = exports.google = void 0;
-exports.google = __importStar(require("./Google/google"));
-exports.facebook = __importStar(require("./Facebook/facebook"));
-exports.discord = __importStar(require("./Discord/discord"));
-exports.github = __importStar(require("./GitHub/github"));
-exports.steam = __importStar(require("./Steam/steam"));
-exports.oauth = __importStar(require("./Auth/auth-backend"));
+exports.getSessionToken = void 0;
+const errors_1 = require("../Errors/errors");
+const wix_members_backend_1 = require("wix-members-backend");
+const providers = __importStar(require("../index"));
+async function getSessionToken(provider, options, access_token) {
+    try {
+        const response = await providers[provider].authUser(options, undefined, access_token);
+        const email = response.email;
+        const sessionToken = await wix_members_backend_1.authentication.generateSessionToken(email);
+        return sessionToken;
+    }
+    catch (err) {
+        throw Error(`${errors_1.prefix} ${provider} - failed to login member with email.`);
+    }
+}
+exports.getSessionToken = getSessionToken;
