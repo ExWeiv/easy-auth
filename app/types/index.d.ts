@@ -7,7 +7,10 @@
 declare module '@exweiv/easy-auth' {
     type AuthResponse = { [key: string]: any };
 
-    namespace Facebook {
+    /**
+    * Read Facebook Docs for more info about anything here.
+    */
+    namespace facebook {
         type RedirectURLOptions = {
             redirect_uri: string,
             client_id: string,
@@ -37,18 +40,13 @@ declare module '@exweiv/easy-auth' {
             token_type: string,
             expires_in: number
         }
-    }
 
-    /**
-     * Read Facebook Docs for more info about anything here.
-     */
-    interface facebook {
         /**
          * Creates a redirect url for authenticating user via Facebook
          * 
          * @param options Options that's used when creating redirect url.
          */
-        redirectURL(options: Facebook.RedirectURLOptions): string;
+        function redirectURL(options: RedirectURLOptions): string;
 
         /**
          * Gets user data from Facebook
@@ -57,17 +55,20 @@ declare module '@exweiv/easy-auth' {
          * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `FacebookClientSecret`.
          * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        authUser(options: Facebook.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+        function authUser(options: AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
 
         /**
          * Gets tokens for API calls to Facebook. Keep in mind Facebook has a different system for tokens. Facebook doesn't have any refresh_tokens instead you exhcnage expired tokens with new ones.
          * 
          * @param options Options that's used when getting tokens from Facebook
          */
-        getTokens(options: Facebook.TokensOptions): Promise<Facebook.TokensResponse>;
+        function getTokens(options: TokensOptions): Promise<TokensResponse>;
     }
 
-    namespace Google {
+    /**
+    * Read Google Docs for more info about anything here.
+    */
+    namespace google {
         type RedirectURLOptions = {
             redirect_uri: string,
             client_id: string,
@@ -101,18 +102,13 @@ declare module '@exweiv/easy-auth' {
             scope: string,
             token_type: string
         }
-    }
 
-    /**
-     * Read Google Docs for more info about anything here.
-     */
-    interface google {
         /**
          * Creates a redirect url for authenticating user via Google
          * 
          * @param options Options that's used when creating redirect url.
          */
-        redirectURL(options: Google.RedirectURLOptions): string;
+        function redirectURL(options: RedirectURLOptions): string;
 
         /**
          * Gets user data from Google
@@ -121,17 +117,20 @@ declare module '@exweiv/easy-auth' {
          * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `GoogleClientSecret`.
          * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        authUser(options: Google.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+        function authUser(options: AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
 
         /**
          * Gets tokens for API calls to Google. You can refresh expired tokens using refresh tokens.
          * 
          * @param options Options that's used when getting tokens from Google
          */
-        getTokens(options: Google.TokensOptions): Promise<Google.TokensResponse>;
+        function getTokens(options: TokensOptions): Promise<TokensResponse>;
     }
 
-    namespace GitHub {
+    /**
+    * Read GitHub Docs for more info about anything here.
+    */
+    namespace github {
         type RedirectURLOptions = {
             redirect_uri: string,
             client_id: string,
@@ -164,18 +163,13 @@ declare module '@exweiv/easy-auth' {
             scope: string,
             token_type: string
         }
-    }
 
-    /**
-     * Read GitHub Docs for more info about anything here.
-     */
-    interface github {
         /**
-         * Creates a redirect url for authenticating user via GitHub
-         * 
-         * @param options Options that's used when creating redirect url.
-         */
-        redirectURL(options: GitHub.RedirectURLOptions): string;
+        * Creates a redirect url for authenticating user via GitHub
+        * 
+        * @param options Options that's used when creating redirect url.
+        */
+        function redirectURL(options: RedirectURLOptions): string;
 
         /**
          * Gets user data from GitHub
@@ -184,17 +178,20 @@ declare module '@exweiv/easy-auth' {
          * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `GitHubClientSecret`.
          * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        authUser(options: GitHub.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+        function authUser(options: AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
 
         /**
          * Gets tokens for API calls to GitHub. You can refresh expired tokens using refresh tokens.
          * 
          * @param options Options that's used when getting tokens from GitHub
          */
-        getTokens(options: GitHub.TokensOptions): Promise<GitHub.TokensResponse>;
+        function getTokens(options: TokensOptions): Promise<TokensResponse>;
     }
 
-    namespace Discord {
+    /**
+    * Read Discord Docs for more info about anything here.
+    */
+    namespace discord {
         type RedirectURLOptions = {
             redirect_uri: string,
             client_id: string,
@@ -227,18 +224,13 @@ declare module '@exweiv/easy-auth' {
             scope: string,
             refresh_token: string
         }
-    }
 
-    /**
-     * Read Discord Docs for more info about anything here.
-     */
-    interface discord {
         /**
-         * Creates a redirect url for authenticating user via Discord
-         * 
-         * @param options Options that's used when creating redirect url.
-         */
-        redirectURL(options: Discord.RedirectURLOptions): string;
+             * Creates a redirect url for authenticating user via Discord
+             * 
+             * @param options Options that's used when creating redirect url.
+             */
+        function redirectURL(options: RedirectURLOptions): string;
 
         /**
          * Gets user data from Discord
@@ -247,17 +239,22 @@ declare module '@exweiv/easy-auth' {
          * @param client_secret Defaults to undefined, if you don't pass a client_secret API will use Wix Secret Manager to find client_secret named as `DiscordClientSecret`.
          * @param access_token Defaults to undefined, if you don't pass a access_token API will get new one each time.
          */
-        userAuth(options: Discord.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
+        function userAuth(options: AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse>;
 
         /**
          * Gets tokens for API calls to Discord. You can refresh expired tokens using refresh tokens.
          * 
          * @param options Options that's used when getting tokens from Discord
          */
-        getTokens(options: Discord.TokensOptions): Promise<Discord.TokensResponse>;
+        function getTokens(options: TokensOptions): Promise<TokensResponse>;
     }
 
-    namespace Steam {
+    /**
+    * Steam itself doesn't provide any OAuth 2.0 or something similar to authenticate users with their APIs. You'll need to implement a secure way to authenticate users via Steam.
+    * This isn't a realy OAuth 2.0 method since you won't get any access_token after user sign-in to Steam, what you'll get is users's public Steam ID (number).
+    * That you can use to get public info of that user after successful login.
+    */
+    namespace steam {
         type RedirectURLOptions = {
             realm: string,
             redirect_uri: string,
@@ -267,20 +264,14 @@ declare module '@exweiv/easy-auth' {
         type AuthOptions = {
             steamId: string
         }
-    }
 
-    /**
-     * Steam itself doesn't provide any OAuth 2.0 or something similar to authenticate users with their APIs. You'll need to implement a secure way to authenticate users via Steam.
-     * This isn't a realy OAuth 2.0 method since you won't get any access_token after user sign-in to Steam, what you'll get is users's public Steam ID (number).
-     * That you can use to get public info of that user after successful login.
-     */
-    interface steam {
+
         /**
-         * Creates a redirect url for authenticating user via Steam
-         * 
-         * @param options Options that's used when creating redirect url.
-         */
-        redirectURL(options: Steam.RedirectURLOptions): string;
+        * Creates a redirect url for authenticating user via Steam
+        * 
+        * @param options Options that's used when creating redirect url.
+        */
+        function redirectURL(options: RedirectURLOptions): string;
 
         /**
          * Gets user data from Steam
@@ -288,6 +279,25 @@ declare module '@exweiv/easy-auth' {
          * @param options Options that's used when getting user data from Steam.
          * @param client_secret Defaults to undefined, if you don't pass a client_secret (apiKey) API will use Wix Secret Manager to find client_secret named as `SteamClientSecret`.
          */
-        userAuth(options: Steam.AuthOptions, client_secret?: string): Promise<AuthResponse>;
+        function userAuth(options: AuthOptions, client_secret?: string): Promise<AuthResponse>;
     }
+
+    /**
+    * Helper functions to quickly integrate OAuth providers with Wix Members in backend 
+    */
+    namespace oauth {
+        type OAuthProviders = "google" | "facebook" | "discord" | "github";
+        type OAuthOptions = google.AuthOptions & facebook.AuthOptions & discord.AuthOptions & github.AuthOptions;
+
+        /**
+         * This function handles the user authentication and returns a session token to be used in the frontend with wix-members-frontend APIs.
+         * 
+         * @param provider Provider you want to use for the process (This function currently does not support Steam)
+         * @param options authUser options for the process related options based on the provider
+         */
+        function getSessionToken(provider: OAuthProviders, options: OAuthOptions): Promise<string>;
+    }
+
+    // type Providers = "google" | "facebook" | "discord" | "steam" | "github";
+    // type ProvidersList = Providers[];
 }

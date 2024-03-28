@@ -1,7 +1,7 @@
 /// <reference path="../../types/index.d.ts" />
 
 // Type Imports
-import type { Google, AuthResponse } from '@exweiv/easy-auth';
+import type { google, AuthResponse } from '@exweiv/easy-auth';
 // API Imports
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import querystring from 'querystring';
 // Internal Imports
 import errCodes from '../Errors/errors';
 
-export const redirectURL = (options: Google.RedirectURLOptions): string => {
+export const redirectURL = (options: google.RedirectURLOptions): string => {
     try {
         const {
             redirect_uri,
@@ -43,7 +43,7 @@ export const redirectURL = (options: Google.RedirectURLOptions): string => {
     }
 }
 
-export const authUser = async (options: Google.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
+export const authUser = async (options: google.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
         const { client_id, redirect_uri, code, grant_type } = options;
 
@@ -69,7 +69,7 @@ export const authUser = async (options: Google.AuthOptions, client_secret?: stri
     }
 }
 
-export const getTokens = async (options: Google.TokensOptions): Promise<Google.TokensResponse> => {
+export const getTokens = async (options: google.TokensOptions): Promise<google.TokensResponse> => {
     try {
         const {
             client_id,

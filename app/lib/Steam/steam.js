@@ -33,7 +33,7 @@ const authUser = async (options, client_secret) => {
         const steamUserResponse = await axios_1.default.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${!client_secret ? await (0, wix_secret_helpers_1.getSecretValue)("SteamClientSecret") : client_secret}&steamids=${steamId}`);
         const result = steamUserResponse.data;
         if (!(result && result.response && Array.isArray(result.response.players) && result.response.players.length > 0)) {
-            throw new Error(`Malformed response while retrieving user's Steam profile information`);
+            throw new Error(`Malformed response while retrieving user's steam profile information`);
         }
         return result.response.players[0];
     }

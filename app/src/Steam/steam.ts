@@ -1,7 +1,7 @@
 /// <reference path="../../types/index.d.ts" />
 
 // Type Imports
-import type { Steam, AuthResponse } from '@exweiv/easy-auth';
+import type { steam, AuthResponse } from '@exweiv/easy-auth';
 // API Imports
 import axios from 'axios';
 import { getSecretValue } from '@exweiv/wix-secret-helpers';
@@ -9,7 +9,7 @@ import querystring from 'querystring';
 // Internal Imports
 import errCodes from '../Errors/errors';
 
-export const redirectURL = (options: Steam.RedirectURLOptions): string => {
+export const redirectURL = (options: steam.RedirectURLOptions): string => {
     try {
         const {
             realm,
@@ -32,7 +32,7 @@ export const redirectURL = (options: Steam.RedirectURLOptions): string => {
     }
 }
 
-export const authUser = async (options: Steam.AuthOptions, client_secret?: string): Promise<AuthResponse> => {
+export const authUser = async (options: steam.AuthOptions, client_secret?: string): Promise<AuthResponse> => {
     try {
         const { steamId } = options;
 
@@ -40,7 +40,7 @@ export const authUser = async (options: Steam.AuthOptions, client_secret?: strin
         const result = steamUserResponse.data;
 
         if (!(result && result.response && Array.isArray(result.response.players) && result.response.players.length > 0)) {
-            throw new Error(`Malformed response while retrieving user's Steam profile information`);
+            throw new Error(`Malformed response while retrieving user's steam profile information`);
         }
 
         return result.response.players[0];
