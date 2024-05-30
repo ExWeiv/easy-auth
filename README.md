@@ -4,6 +4,8 @@ This library enables you to integrate some popular OAuth options with your Wix w
 
 If you are looking for something basic for your Wix site then you can install **Easy Auth** application from Wix App Market. The version in the app market is designed for basic use cases or basic users to quickly integrate providers as easy as possible.
 
+> [Documentation](https://easy-auth.apps.exweiv.com/)
+
 **Currently this package handles OAuth for:**
 
 - Facebook ✅
@@ -17,12 +19,6 @@ If you are looking for something basic for your Wix site then you can install **
 - Microsoft
 - Twitter
 - Twitch
-
-### Docs and Tutorials
-
-We are on the way of creating a documentation, but it's not available right now. But we have auto-complete and TS support if you have enabled Git integration in your Wix website then you'll see integrated examples and docs with auto-completes.
-
-Check out our YouTube Channel for tutorials.
 
 ### About Steam OAuth Process
 

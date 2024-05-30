@@ -8,13 +8,18 @@ import { getSecretValue } from '@exweiv/wix-secret-helpers';
 import querystring from 'querystring';
 // Internal Imports
 import errCodes from '../Errors/errors';
+import { copyOwnPropsOnly } from '../helpers';
 
 export const redirectURL = (options: steam.RedirectURLOptions): string => {
     try {
+        if (typeof options !== "object") {
+            throw new Error("parameter type is invalied, options must be an object!");
+        }
+
         const {
             realm,
             redirect_uri
-        } = options;
+        } = copyOwnPropsOnly(options);
 
         const rootURL = "https://steamcommunity.com/openid/login";
         const urlOptions = {
@@ -34,7 +39,11 @@ export const redirectURL = (options: steam.RedirectURLOptions): string => {
 
 export const authUser = async (options: steam.AuthOptions, client_secret?: string): Promise<AuthResponse> => {
     try {
-        const { steamId } = options;
+        if (typeof options !== "object" || typeof client_secret !== "string") {
+            throw new Error("parameter types are invalied, options is object and client_secret is must be a string!");
+        }
+
+        const { steamId } = copyOwnPropsOnly(options);
 
         const steamUserResponse = await axios.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${!client_secret ? await getSecretValue("SteamClientSecret") : client_secret}&steamids=${steamId}`)
         const result = steamUserResponse.data;

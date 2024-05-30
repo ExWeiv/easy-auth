@@ -9,9 +9,14 @@ import querystring from 'querystring';
 import { getSecretValue } from '@exweiv/wix-secret-helpers';
 // Internal Imports
 import errCodes from '../Errors/errors';
+import { copyOwnPropsOnly } from '../helpers';
 
 export const redirectURL = (options: discord.RedirectURLOptions): string => {
     try {
+        if (typeof options !== "object") {
+            throw new Error("parameter type is invalied, options must be an object!");
+        }
+
         const {
             client_id,
             redirect_uri,
@@ -19,7 +24,7 @@ export const redirectURL = (options: discord.RedirectURLOptions): string => {
             response_type,
             prompt,
             scope
-        } = options;
+        } = copyOwnPropsOnly(options);
 
         if (!redirect_uri || !client_id) {
             throw Error(`${errCodes.prefix} ${errCodes.provider[3]} - client_id, redirect_uri and scope must be a valid value`);
@@ -43,12 +48,16 @@ export const redirectURL = (options: discord.RedirectURLOptions): string => {
 
 export const authUser = async (options: discord.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
+        if (typeof options !== "object" || typeof client_secret !== "string" || typeof access_token !== "string") {
+            throw new Error("parameter types are invalied, options is object, client_secret and access_token is must be a string!");
+        }
+
         const {
             code,
             redirect_uri,
             grant_type,
             client_id,
-        } = options;
+        } = copyOwnPropsOnly(options);
 
         if (!access_token) {
             const tokens = await getTokens({
@@ -75,9 +84,13 @@ export const authUser = async (options: discord.AuthOptions, client_secret?: str
 
 export const getTokens = async (options: discord.TokensOptions): Promise<discord.TokensResponse> => {
     try {
+        if (typeof options !== "object") {
+            throw new Error("parameter type is invalied, options must be an object!");
+        }
+
         const tokenParams = new URLSearchParams();
 
-        for (const [key, value] of Object.entries(options)) {
+        for (const [key, value] of Object.entries(copyOwnPropsOnly(options))) {
             tokenParams.append(key, value);
         }
 
