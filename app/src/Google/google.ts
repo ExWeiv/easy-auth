@@ -9,9 +9,14 @@ import { getSecretValue } from '@exweiv/wix-secret-helpers';
 import querystring from 'querystring';
 // Internal Imports
 import errCodes from '../Errors/errors';
+import { copyOwnPropsOnly } from '../helpers';
 
 export const redirectURL = (options: google.RedirectURLOptions): string => {
     try {
+        if (typeof options !== "object") {
+            throw new Error("parameter type is invalied, options must be an object!");
+        }
+
         const {
             redirect_uri,
             client_id,
@@ -20,7 +25,7 @@ export const redirectURL = (options: google.RedirectURLOptions): string => {
             state,
             access_type,
             prompt
-        } = options;
+        } = copyOwnPropsOnly(options);
 
         if (!redirect_uri || !client_id) {
             throw Error(`${errCodes.prefix} ${errCodes.provider[1]} - client_id, redirect_uri and scope must be a valid value`);
@@ -45,7 +50,11 @@ export const redirectURL = (options: google.RedirectURLOptions): string => {
 
 export const authUser = async (options: google.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
-        const { client_id, redirect_uri, code, grant_type } = options;
+        if (typeof options !== "object" || typeof client_secret !== "string" || typeof access_token !== "string") {
+            throw new Error("parameter types are invalied, options is object, client_secret and access_token is must be a string!");
+        }
+
+        const { client_id, redirect_uri, code, grant_type } = copyOwnPropsOnly(options);
 
         if (!client_id || !redirect_uri || !code) {
             throw Error(`${errCodes.prefix} ${errCodes.provider[1]} - client_id, redirect_uri and code must be a valid value!`);
@@ -71,6 +80,10 @@ export const authUser = async (options: google.AuthOptions, client_secret?: stri
 
 export const getTokens = async (options: google.TokensOptions): Promise<google.TokensResponse> => {
     try {
+        if (typeof options !== "object") {
+            throw new Error("parameter type is invalied, options must be an object!");
+        }
+
         const {
             client_id,
             client_secret,
@@ -78,7 +91,7 @@ export const getTokens = async (options: google.TokensOptions): Promise<google.T
             grant_type,
             redirect_uri,
             refresh_token
-        } = options;
+        } = copyOwnPropsOnly(options);
 
         const tokenParams = new URLSearchParams({
             grant_type: !grant_type ? "authorization_code" : grant_type,

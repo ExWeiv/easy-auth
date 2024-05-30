@@ -8,9 +8,13 @@ const axios_1 = __importDefault(require("axios"));
 const wix_secret_helpers_1 = require("@exweiv/wix-secret-helpers");
 const querystring_1 = __importDefault(require("querystring"));
 const errors_1 = __importDefault(require("../Errors/errors"));
+const helpers_1 = require("../helpers");
 const redirectURL = (options) => {
     try {
-        const { realm, redirect_uri } = options;
+        if (typeof options !== "object") {
+            throw new Error("parameter type is invalied, options must be an object!");
+        }
+        const { realm, redirect_uri } = (0, helpers_1.copyOwnPropsOnly)(options);
         const rootURL = "https://steamcommunity.com/openid/login";
         const urlOptions = {
             "openid.ns": "http://specs.openid.net/auth/2.0",
@@ -29,7 +33,10 @@ const redirectURL = (options) => {
 exports.redirectURL = redirectURL;
 const authUser = async (options, client_secret) => {
     try {
-        const { steamId } = options;
+        if (typeof options !== "object" || typeof client_secret !== "string") {
+            throw new Error("parameter types are invalied, options is object and client_secret is must be a string!");
+        }
+        const { steamId } = (0, helpers_1.copyOwnPropsOnly)(options);
         const steamUserResponse = await axios_1.default.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${!client_secret ? await (0, wix_secret_helpers_1.getSecretValue)("SteamClientSecret") : client_secret}&steamids=${steamId}`);
         const result = steamUserResponse.data;
         if (!(result && result.response && Array.isArray(result.response.players) && result.response.players.length > 0)) {

@@ -9,16 +9,21 @@ import querystring from 'querystring';
 import { getSecretValue } from '@exweiv/wix-secret-helpers';
 // Internal Imports
 import errCodes from '../Errors/errors';
+import { copyOwnPropsOnly } from '../helpers';
 
 export const redirectURL = (options: facebook.RedirectURLOptions): string => {
     try {
+        if (typeof options !== "object") {
+            throw new Error("parameter type is invalied, options must be an object!");
+        }
+
         const {
             redirect_uri,
             client_id,
             response_type,
             scope,
             state
-        } = options;
+        } = copyOwnPropsOnly(options);
 
         if (!redirect_uri || !client_id) {
             throw Error(`${errCodes.prefix} client_id and redirect_uri must be a valid value`);
@@ -41,7 +46,11 @@ export const redirectURL = (options: facebook.RedirectURLOptions): string => {
 
 export const authUser = async (options: facebook.AuthOptions, client_secret?: string, access_token?: string): Promise<AuthResponse> => {
     try {
-        const { client_id, redirect_uri, code, fields } = options;
+        if (typeof options !== "object" || typeof client_secret !== "string" || typeof access_token !== "string") {
+            throw new Error("parameter types are invalied, options is object, client_secret and access_token is must be a string!");
+        }
+
+        const { client_id, redirect_uri, code, fields } = copyOwnPropsOnly(options);
 
         if (!client_id || !redirect_uri) {
             throw Error(`${errCodes.prefix} ${errCodes.provider[0]} - client_id and redirect_uri must be a valid value!`);
@@ -66,6 +75,10 @@ export const authUser = async (options: facebook.AuthOptions, client_secret?: st
 
 export const getTokens = async (options: facebook.TokensOptions): Promise<facebook.TokensResponse> => {
     try {
+        if (typeof options !== "object") {
+            throw new Error("parameter type is invalied, options must be an object!");
+        }
+
         const {
             client_id,
             client_secret,
@@ -73,7 +86,7 @@ export const getTokens = async (options: facebook.TokensOptions): Promise<facebo
             code,
             fb_exchange_token,
             grant_type
-        } = options;
+        } = copyOwnPropsOnly(options);
 
         const tokenParams = new URLSearchParams({
             client_id,

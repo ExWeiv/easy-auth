@@ -1,6 +1,6 @@
 {
   "name": "@exweiv/easy-auth",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Integrate popular OAuth apps with your Wix website easily.",
   "main": "./lib/index.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "url": "git@github.com:ExWeiv/easy-auth.git",
     "type": "git"
   },
-  "homepage": "https://apps.exweiv.com/",
+  "homepage": "https://easy-auth.apps.exweiv.com/",
   "bugs": {
     "url": "https://github.com/ExWeiv/easy-auth/issues",
     "email": "info@apps.exweiv.com"
@@ -35,7 +35,7 @@
   "contributors": [
     {
       "name": "Enes Bekar",
-      "url": "https://github.com/l0eix"
+      "url": "https://github.com/loeiks"
     }
   ],
   "engines": {
@@ -53,6 +53,5 @@
     "@types/uuid": "^9.0.8",
     "typedoc": "^0.25.12",
     "typedoc-plugin-extras": "^3.0.0"
-  },
-  "readme": "https://raw.githubusercontent.com/ExWeiv/easy-auth/main/README.md"
+  }
 }
