@@ -9,9 +9,13 @@ const axios_1 = __importDefault(require("axios"));
 const wix_secret_helpers_1 = require("@exweiv/wix-secret-helpers");
 const querystring_1 = __importDefault(require("querystring"));
 const errors_1 = __importDefault(require("../Errors/errors"));
+const helpers_1 = require("../helpers");
 const redirectURL = (options) => {
     try {
-        const { redirect_uri, client_id, response_type, scope, state, access_type, prompt } = options;
+        if (typeof options !== "object") {
+            throw new Error("parameter type is invalied, options must be an object!");
+        }
+        const { redirect_uri, client_id, response_type, scope, state, access_type, prompt } = (0, helpers_1.copyOwnPropsOnly)(options);
         if (!redirect_uri || !client_id) {
             throw Error(`${errors_1.default.prefix} ${errors_1.default.provider[1]} - client_id, redirect_uri and scope must be a valid value`);
         }
@@ -34,7 +38,10 @@ const redirectURL = (options) => {
 exports.redirectURL = redirectURL;
 const authUser = async (options, client_secret, access_token) => {
     try {
-        const { client_id, redirect_uri, code, grant_type } = options;
+        if (typeof options !== "object" || typeof client_secret !== "string" || typeof access_token !== "string") {
+            throw new Error("parameter types are invalied, options is object, client_secret and access_token is must be a string!");
+        }
+        const { client_id, redirect_uri, code, grant_type } = (0, helpers_1.copyOwnPropsOnly)(options);
         if (!client_id || !redirect_uri || !code) {
             throw Error(`${errors_1.default.prefix} ${errors_1.default.provider[1]} - client_id, redirect_uri and code must be a valid value!`);
         }
@@ -58,7 +65,10 @@ const authUser = async (options, client_secret, access_token) => {
 exports.authUser = authUser;
 const getTokens = async (options) => {
     try {
-        const { client_id, client_secret, code, grant_type, redirect_uri, refresh_token } = options;
+        if (typeof options !== "object") {
+            throw new Error("parameter type is invalied, options must be an object!");
+        }
+        const { client_id, client_secret, code, grant_type, redirect_uri, refresh_token } = (0, helpers_1.copyOwnPropsOnly)(options);
         const tokenParams = new URLSearchParams({
             grant_type: !grant_type ? "authorization_code" : grant_type,
             client_secret: !client_secret ? await (0, wix_secret_helpers_1.getSecretValue)("GoogleClientSecret") : client_secret,
